@@ -1,0 +1,36 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+#app,.container{
+    width:100%;
+    height: 100%;
+}
+body,html{
+    width: 100%;
+    height: 100%;
+}
+.clearfix:after{
+    content: '';
+    display: block;
+    clear: both;
+}
+.size{
+    font-size: 2rem;
+}
+
+
+
+/* element-ui */
+.tab-bar > .el-tabs__header{
+    margin-top:20px !important; 
+}
+.tab-bar .el-tabs__item{
+    background: #fff;
+}
+.el-menu-item:hover{
+    background-color: #545C64 !important;
+}
+.el-menu-item .is-active{
+    background-color: #fff !important;
+}
