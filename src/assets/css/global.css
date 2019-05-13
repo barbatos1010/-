@@ -19,18 +19,35 @@ body,html{
     font-size: 2rem;
 }
 
-
-
 /* element-ui */
+.login-from .el-input__inner{
+    background: rgba(255,255,255,0.3);
+    border:#ccc 1px solid;
+    color: rgba(255,255,255,1)
+}
+
+.login-from  .el-form-item__label{
+    color: #fff;
+}
+
 .tab-bar > .el-tabs__header{
     margin-top:20px !important; 
 }
 .tab-bar .el-tabs__item{
     background: #fff;
 }
+.tab-bar .el-tabs__nav-scroll > .el-tabs__nav > .el-tabs__item{
+    border-bottom:1px #e4e7ed solid;
+}
+.tab-bar .el-tabs__nav>.el-tabs__item.is-active{
+    border-bottom:1px #fff solid;
+}
 .el-menu-item:hover{
     background-color: #545C64 !important;
 }
 .el-menu-item .is-active{
     background-color: #fff !important;
+}
+.el-tabs__nav{
+    background: #fff !important;
 }

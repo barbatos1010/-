@@ -2,7 +2,7 @@
   <div class="container">
     <!-- top-bar -->
     <div class="header">
-      <div class="brand" :style="{width:isCollapse ? '24px' : '201px'}">智学无忧it教育</div>
+      <div class="brand" @click="logo" :style="{width:isCollapse ? '44px' : '220.5px'}">智学无忧it教育</div>
       <!-- 侧边栏控制器 -->
       <div class="menu-control" @click="isCollapse = !isCollapse">
         <span v-show="isCollapse" class="el-icon-d-arrow-right"></span>
@@ -31,11 +31,12 @@
       <!-- 侧边栏 -->
       <el-menu
         class="el-menu-vertical-demo"
-        default-active="1"
+        :default-active="selectionTab"
         :collapse="isCollapse"
         background-color="#000"
         text-color="#fff"
         active-text-color="#ffd04b"
+        :default-openeds="['2']"
       >
         <el-submenu index="1">
           <template slot="title">
@@ -43,11 +44,11 @@
             <span slot="title">在线测试</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item @click="addTab('planTest','安排测试')" index="1-1">安排测试</el-menu-item>
-            <el-menu-item @click="addTab('correctPapers','批阅试卷')" index="1-2">批阅试卷</el-menu-item>
-            <el-menu-item @click="addTab('createPapers','老师出卷')" index="1-3">老师出卷</el-menu-item>
-            <el-menu-item @click="addTab('papersManagement','试卷管理')" index="1-4">试卷管理</el-menu-item>
-            <el-menu-item @click="addTab('checkResult','查看成绩')" index="1-5">查看成绩</el-menu-item>
+            <el-menu-item @click="addTab('planTest','安排测试')" index="planTest">安排测试</el-menu-item>
+            <el-menu-item @click="addTab('correctPapers','批阅试卷')" index="correctPapers">批阅试卷</el-menu-item>
+            <el-menu-item @click="addTab('createPapers','老师出卷')" index="createPapers">老师出卷</el-menu-item>
+            <el-menu-item @click="addTab('papersManagement','试卷管理')" index="papersManagement">试卷管理</el-menu-item>
+            <el-menu-item @click="addTab('checkResult','查看成绩')" index="checkResult">查看成绩</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="2">
@@ -56,10 +57,10 @@
             <span slot="title">基础数据</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item @click="addTab('changePassword','修改密码')" index="2-1">修改密码</el-menu-item>
-            <el-menu-item @click="addTab('teacherManagement','老师管理')" index="2-2">老师管理</el-menu-item>
-            <el-menu-item @click="addTab('classManagement','班级管理')" index="2-3">班级管理</el-menu-item>
-            <el-menu-item @click="addTab('studentManagement','学生管理')" index="2-4">学生管理</el-menu-item>
+            <el-menu-item @click="addTab('changePassword','修改密码')" index="changePassword">修改密码</el-menu-item>
+            <el-menu-item @click="addTab('teacherManagement','老师管理')" index="teacherManagement">老师管理</el-menu-item>
+            <el-menu-item @click="addTab('classManagement','班级管理')" index="classManagement">班级管理</el-menu-item>
+            <el-menu-item @click="addTab('studentManagement','学生管理')" index="studentManagement">学生管理</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
       </el-menu>
@@ -75,8 +76,9 @@
 export default {
   data() {
     return {
-      isCollapse: true,
+      isCollapse: false,
       selectionTab: "",
+      selectionMenu:'',
       tabs: []
     };
   },
@@ -97,6 +99,9 @@ export default {
       let tabs = this.tabs;
       let activeName = this.selectionTab;
       if (activeName === targetName) {
+        if(tabs.length == 1){
+            this.$router.push({name:'homePage'})
+        }
         tabs.forEach((tab, index) => {
           if (tab.name === targetName) {
             let nextTab = tabs[index + 1] || tabs[index - 1];
@@ -107,12 +112,16 @@ export default {
         });
       }
       this.selectionTab = activeName;
+      // console.log(this.selectionTab)
       this.tabs = tabs.filter(tab => tab.name !== targetName);
+    },
+    logo(){
+      this.$router.push({name:'homePage'})
+      this.selectionTab = ''
     }
   },
   watch: {
     selectionTab(newVal) {
-      console.log(newVal);
       this.$router.push({ name: newVal });
     }
   }
@@ -124,7 +133,7 @@ export default {
   background-color: black;
   height: 60px;
   box-sizing: border-box;
-  padding: 0 20px;
+  padding-right: 20px;
   display: flex;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
@@ -142,14 +151,15 @@ export default {
   line-height: 60px;
 }
 .brand {
-  padding-right: 20px;
-  font-size: 1.8rem;
+  padding:0 10px;
+  font-size: 1.3rem;
   font-weight: 700;
   color: white;
   float: left;
   line-height: 60px;
   transition: all 0.4s;
   overflow: hidden;
+  text-align: center;
 }
 .content {
   display: flex;
@@ -158,6 +168,7 @@ export default {
 .view-window {
   width: 100%;
   height: 100%;
+  position: relative;
 }
 .menu-control {
   margin-right: 20px;
