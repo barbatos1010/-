@@ -1,14 +1,13 @@
 <template>
-  <div class="local-container" style="">
-    <div style="position:relative;  width:100%; height:100%;">
-      <el-table class="table"  :stripe="true" size="medium" :data="classList" border>
-        <el-table-column fixed prop="classId" label="编号" width="150"></el-table-column>
+  <div class="local-container">
+      <el-table class="table" max-height="400px;" :stripe="true" size="medium" :data="classList" border>
+        <el-table-column prop="classId" label="编号" width="150"></el-table-column>
         <el-table-column prop="className" label="班级名称" width="120"></el-table-column>
         <el-table-column prop="classStudents" label="人数" width="120"></el-table-column>
         <el-table-column prop="courseName" label="课程" width="120"></el-table-column>
         <el-table-column prop="userName" label="授课教师" width="100"></el-table-column>
         <el-table-column prop="classCreateTime" label="开班时间" width="200"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
+        <el-table-column label="操作" width="100">
           <template slot-scope="scope">
             <el-button
               type="text"
@@ -22,7 +21,6 @@
       <div class="add">
         <el-button @click="classFromVisible = true" type="success" icon="el-icon-plus" circle></el-button>
       </div>
-    </div>
     <!-- 编辑班级信息表单 -->
     <el-dialog
       title="编辑班级信息"
@@ -44,14 +42,28 @@
           <el-input v-model="editContent.className"></el-input>
         </el-form-item>
         <el-form-item label="课程编号" prop="classCourseId">
-          <el-input v-model="editContent.classCourseId"></el-input>
+          <el-select v-model="editContent.classCourseId" placeholder="请选择">
+            <el-option
+              v-for="item in coursess"
+              :key="item.courseId"
+              :label="item.courseName"
+              :value="item.courseId"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="教师编号" prop="classTeacherId">
-          <el-input v-model="editContent.classTeacherId"></el-input>
+          <el-select v-model="editContent.classTeacherId" placeholder="请选择">
+            <el-option
+              v-for="item in teachers"
+              :key="item.userId"
+              :label="item.userName"
+              :value="item.userId"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="modifyClass">提交</el-button>
-          <el-button @click="teacherFromVisible2 = false;">取消</el-button>
+          <el-button @click="classFromVisible2 = false;">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -76,10 +88,24 @@
           <el-input v-model="addContent.className"></el-input>
         </el-form-item>
         <el-form-item label="课程编号" prop="classCourseId">
-          <el-input v-model="addContent.classCourseId"></el-input>
+          <el-select v-model="addContent.classCourseId" placeholder="请选择">
+            <el-option
+              v-for="item in coursess"
+              :key="item.courseId"
+              :label="item.courseName"
+              :value="item.courseId"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="教师编号" prop="classTeacherId">
-          <el-input v-model="addContent.classTeacherId"></el-input>
+          <el-select v-model="addContent.classTeacherId" placeholder="请选择">
+            <el-option
+              v-for="item in teachers"
+              :key="item.userId"
+              :label="item.userName"
+              :value="item.userId"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="addClass">提交</el-button>
@@ -87,111 +113,115 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
-      classList: [],
       addContent: {
         className: "",
         classCourseId: "",
         classTeacherId: ""
       },
-      editContent:{
-          
+      editContent: {
+        
       },
       classFromVisible: false,
       classFromVisible2: false,
-      editIndex:''
+      editIndex: ""
     };
   },
+  computed: {
+    ...mapState(["coursess","teachers"]),
+    classList: {
+      get() {
+        return this.$store.state.classList;
+      },
+      set(newVal) {
+        this.$store.state.classList = newVal;
+      }
+    }
+  },
   methods: {
-    editClass(index,classInfo){
+    ...mapActions(["getClassList", "getCoursess","getTeachers"]),
+    editClass(index, classInfo) {
       this.editIndex = index;
       this.editContent = JSON.parse(JSON.stringify(classInfo));
       this.classFromVisible2 = true;
     },
-    //获取课程信息
-    async getAllCourse() {
-      let data = await this.$api.API_GETALL_COURSE();
-      console.log('课程',data);
-    },
-    //获取班级信息
-    async getAllClass() {
-      let data = await this.$api.API_GETALL_CLASS();
-      this.classList = data.data;
-    //   console.log(data);
-    },
     //添加新班
     async addClass() {
       let data = await this.$api.API_ADD_CLASS(this.addContent);
-      if(data.data.code == 1){
-        this.getAllClass();
+      if (data.code == 1) {
+        await this.getClassList();
         this.classFromVisible = false;
       }
     },
     //移除班级
     async removeClass(classId, index) {
       let data = await this.$api.API_REMOVE_CLASS(`?classId=${classId}`);
-      if (data.data.code == 1) {
+      if (data.code == 1) {
         this.classList.splice(index, 1);
       }
     },
     //修改班级信息
     async modifyClass() {
-        let params = this.editContent;
+      let params = this.editContent;
       const obj = {
-         classId :params.classId,
-         className :params.className,
-         classCourseId :params.classCourseId,
-         classTeacherId :params.classTeacherId,
-      }
+        classId: params.classId,
+        className: params.className,
+        classCourseId: params.classCourseId,
+        classTeacherId: params.classTeacherId
+      };
       let data = await this.$api.API_MODIFY_CLASS(obj);
-      if(data.data.code == 1){
-          this.getAllClass()
-          this.classFromVisible2 = false;
+      if (data.code == 1) {
+        this.getClassList();
+        this.classFromVisible2 = false;
       }
       console.log(data);
     }
   },
   created() {
-    this.getAllClass();
-    this.getAllCourse()
+    this.getClassList();
+    this.getCoursess();
+    this.getTeachers()
   },
   watch: {
     classFromVisible(newVal) {
-      if (!newVal) {
         let content = this.addContent;
         for (let i in content) {
           content[i] = "";
         }
-      }
     }
   }
 };
 </script>
 
 <style scoped>
-.local-container{
+.local-container {
   width: 1000px;
+  height: 100%;
   margin: 0 auto;
   padding-top: 80px;
-  position:relative;
+  position: relative;
+  box-sizing: border-box;
 }
 .table {
-  width:1000px;
+  width: 909px;
   max-height: 400px;
+}
+.table /deep/ .el-table__body-wrapper {
+  max-height:356px !important;
 }
 .teacherFrom {
   text-align: center;
 }
 .add {
   position: absolute;
-  top:0;
-  right:-50px;
+  top:100px;
+  right: -10px;
 }
 </style>

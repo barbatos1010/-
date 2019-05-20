@@ -15,7 +15,6 @@ export default {
     API_MODIFY_STU: (params) => api('post', '/api/Student/ModifyStudent', params),
     //获取班级信息 传入classId （整数）
     API_GET_CLASS: (params) => api('get', '/api/Student/GetClassStudent?', params),
-
     /*******************班级管理接口****************/
     //获取所有的课程
     API_GETALL_COURSE: (params) => api('get', '/api/Class/GetAllCourse', params),
@@ -38,5 +37,27 @@ export default {
     //删除老师 传入教师唯一id
     API_REMOVE_TEACHER: (query) => api('post', '/api/User/RemoveTeacher'+query),
     //修改教师信息
-    API_MODIFY_TEACHER: (params) => api('post', '/api/User/ModifyTeacher', params)
+    API_MODIFY_TEACHER: (params) => api('post', '/api/User/ModifyTeacher', params),
+    
+    /*******************試卷管理****************/
+    
+    /*******制作试卷********/
+    API_MAKE_PAPER: (body,query) => api('post','/api/TestPaper/MakeTestPaper'+query,body),
+    //获取问题类型
+    API_PROBLEM_TYPES:(query) => api('get','/api/TestPaper/GetQuestionType',query),
+    //分页获取试卷列表
+    API_TEST_PAPER_LIST:(query) => api('get','/api/TestPaper/GetTestPaperList',query),
+    //获取试卷信息
+    API_GET_TEST_PAPER:(query) => api('get','/api/TestPaper/GetTestPaper',query),
+    //删除试卷
+    API_DELETE_TEST_PAPER:(query) => api('post','/api/TestPaper/RemoveTestPaper?' + query),
+    //添加题目至试卷
+    API_ADD_QUESTION:(body) => api('post','/api/TestPaper/AddQuestionToTestPaper',body),
+    //修改题目
+    API_MODIFY_QUESTION:(body,query = '') => api('post','/api/TestPaper/ModifyQuestion'+query,body),
+    //修改分值
+    API_MODIFY_SCORE:(body) => api('post','/api/TestPaper/ModifyScore',body),
+    //丛试卷上删除题目
+    API_DEL_QUESTION:(query) => api('post','/api/TestPaper/RemoveQuestionFromTestPaper'+query),
+    
 }

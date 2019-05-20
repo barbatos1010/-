@@ -5,12 +5,12 @@
     </el-select>
     <!-- 展示教师信息表格 -->
     
-      <el-table class="table"  :stripe="true" size="medium" :data="students" border>
-        <el-table-column fixed prop="stuName" label="姓名" width="150"></el-table-column>
+      <el-table max-height='400px' class="table"  :stripe="true" size="medium" :data="students" border>
+        <el-table-column prop="stuName" label="姓名" width="150"></el-table-column>
         <el-table-column prop="stuSex" label="性别" width="120"></el-table-column>
         <el-table-column prop="stuBirthDay" label="生日" width="180"></el-table-column>
         <el-table-column prop="stuMobile" label="手机号码" width="120"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
+        <el-table-column  label="操作" width="100">
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="removeStudent(scope.$index,scope.row.stuUid)">删除</el-button>
             <el-button @click="editStudent(scope.row)" type="text" size="small">编辑</el-button>
@@ -84,6 +84,7 @@
         label-position="left"
         :inline="true"
         ref="teacherForm"
+        
       >
         <el-form-item label="姓名" prop="StuName">
           <el-input v-model="modifyStudentInfo.stuName"></el-input>
@@ -142,7 +143,7 @@ export default {
     async addStudent() {
       let data = await this.$api.API_ADD_STU(this.newStudent);
       console.log(data);
-      if(data.data.code == 1){
+      if(data.code == 1){
         this.getClass(this.value)
         this.newStudentFromVisible = false;
       }
@@ -150,13 +151,12 @@ export default {
     //获取一个班级的学生
     async getClass(classId) {
       let data = await this.$api.API_GET_CLASS(`classId=${classId}`);
-      this.students =data.data;
-      console.log(data.data)
-      
+      this.students = data;
+      // console.log(data)
     },
     async removeStudent(index,stuId) {
       let data = await this.$api.API_REMOVE_STU(`uid=${stuId}`);
-      if(data.data.code == 1){
+      if(data.code == 1){
         this.students.splice(index,1)
       }
     },
@@ -172,16 +172,16 @@ export default {
           StuSex:obj.stuSex
       }
       let data = await this.$api.API_MODIFY_STU(sendData);
-      if(data.data.code == 1){
+      if(data.code == 1){
         this.getClass(this.value)
         this.editStudentFromVisible =false;
       }
-      console.log(data);
+      // console.log(data);
     },
     async getAllClass() {
       let data = await this.$api.API_GETALL_CLASS();
-      this.classList = data.data;
-      console.log(data);
+      this.classList = data;
+      // console.log(data);
     },
   },
   created(){
@@ -197,17 +197,22 @@ export default {
 
 <style scoped>
 .local-container{
-  width: 680px;
+  width: 669px;
   margin: 0 auto;
-  padding-top: 80px;
+  /* padding-top: 80px; */
   position: relative;
+  height: 100%;
+}
+.table /deep/ .el-table__body-wrapper {
+  max-height:356px !important;
 }
 .select-class{
+  margin-top: 80px;
   margin-bottom: 30px;
 }
 .table {
   width: 680px;
-  max-height: 400px;
+  /* max-height: 400px; */
 }
 .teacherFrom {
   text-align: center;

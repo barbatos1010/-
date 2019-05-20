@@ -36,7 +36,6 @@
         background-color="#000"
         text-color="#fff"
         active-text-color="#ffd04b"
-        :default-openeds="['2']"
       >
         <el-submenu index="1">
           <template slot="title">
@@ -65,9 +64,11 @@
         </el-submenu>
       </el-menu>
       <!-- 主体视图窗口 -->
+      <transition name="el-fade-in-linear">
       <div class="view-window">
         <router-view></router-view>
       </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -78,7 +79,7 @@ export default {
     return {
       isCollapse: false,
       selectionTab: "",
-      selectionMenu:'',
+      selectionMenu: "",
       tabs: []
     };
   },
@@ -99,8 +100,8 @@ export default {
       let tabs = this.tabs;
       let activeName = this.selectionTab;
       if (activeName === targetName) {
-        if(tabs.length == 1){
-            this.$router.push({name:'homePage'})
+        if (tabs.length == 1) {
+          this.$router.push({ name: "homePage" });
         }
         tabs.forEach((tab, index) => {
           if (tab.name === targetName) {
@@ -115,10 +116,31 @@ export default {
       // console.log(this.selectionTab)
       this.tabs = tabs.filter(tab => tab.name !== targetName);
     },
-    logo(){
-      this.$router.push({name:'homePage'})
-      this.selectionTab = ''
+    logo() {
+      this.$router.push({ name: "homePage" });
+      this.selectionTab = "";
+    },
+    //页面创建时获取本地存储
+    getStorage() {
+      if (sessionStorage.getItem("TAB_CHECKED")) {
+        console.log(111);
+        this.selectionTab = sessionStorage.getItem("TAB_CHECKED");
+        this.selectionMenu = sessionStorage.getItem("MENU_CHECKED");
+        this.tabs = JSON.parse(sessionStorage.getItem("TAB_LIST"));
+      }
+    },
+    //页面刷新时使用会话存储保存数据
+    storage() {
+      window.addEventListener("beforeunload", () => {
+        sessionStorage.setItem("TAB_LIST",JSON.stringify(this.tabs));
+        sessionStorage.setItem("TAB_CHECKED", this.selectionTab);
+        sessionStorage.setItem("MENU_CHECKED", this.selectionTab);
+      });
     }
+  },
+  created() {
+    this.getStorage();
+    this.storage();
   },
   watch: {
     selectionTab(newVal) {
@@ -151,7 +173,7 @@ export default {
   line-height: 60px;
 }
 .brand {
-  padding:0 10px;
+  padding: 0 10px;
   font-size: 1.3rem;
   font-weight: 700;
   color: white;

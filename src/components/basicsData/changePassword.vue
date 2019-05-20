@@ -49,6 +49,10 @@ export default {
 </script>
 
 <style scoped>
+.container:before{
+  content: '';
+  display: table;
+}
 .passwordFrom{
     width: 300px;
     margin: 100px auto;

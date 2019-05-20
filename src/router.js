@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import home from './components/home.vue'
 import login from './components/login.vue'
+import editTestPaper from './components/onlineTest/editTestPaper.vue'
 Vue.use(Router)
 
 const router =  new Router({
@@ -24,7 +25,7 @@ const router =  new Router({
         meta:{
           requiresAuth:true
         },
-        component:() => import (/*老师出卷*/ './components/homePage.vue')
+        component:() => import (/*首页*/ './components/homePage.vue')
       },{
         path:'createPapers',
         name:'createPapers',
@@ -95,13 +96,20 @@ const router =  new Router({
         requiresAuth:false
       },
       component:login
+    },{
+      path:'/editTestPaper',
+      name:'editTestPaper',
+      meta:{
+        requiresAuth:true
+      },
+      component:editTestPaper
     }
   ]
 })
 //全局路由守卫
 router.beforeEach((to,from,next) => {
  if(to.meta.requiresAuth){
-    console.log(to.name)
+    // console.log(to.name)
       if(sessionStorage.getItem("USER_TOKEN")){
         next()
       }else{

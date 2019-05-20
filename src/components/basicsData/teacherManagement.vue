@@ -1,8 +1,8 @@
 <template>
   <div class="local-container">
     <!-- 展示教师信息表格 -->
-    <div style="position:relative; width:100%; height:100%;">
-      <el-table class="table"  :stripe="true" size="medium" :data="teachers" border>
+    <div >
+      <el-table class="table"   :stripe="true" size="medium" :data="teachers" border>
         <el-table-column fixed prop="userName" label="姓名" width="150"></el-table-column>
         <el-table-column prop="userSex" label="性别" width="120"></el-table-column>
         <el-table-column prop="userTypeTypeName" label="职位" width="120"></el-table-column>
@@ -101,10 +101,11 @@
 </template>
 
 <script>
+import {mapState,mapActions} from 'vuex'
+
 export default {
   data() {
     return {
-      teachers: [],
       editContent: {},
       addContent:{
         userPassword:'',
@@ -117,7 +118,14 @@ export default {
       editIndex: null
     };
   },
+  computed:{
+    teachers:{
+      get() { return this.$store.state.teachers }, 
+      set(newVal) { this.$store.state.teachers = newVal}
+    }
+  },
   methods: {
+    ...mapActions(['getTeachers']),
     // 编辑信息传递
     editTeacher(index, teacherInfo) {
       this.editIndex = index;
@@ -125,16 +133,11 @@ export default {
       this.teacherFromVisible = true;
     },
     //获取所有教师信息
-    async getTeachers() {
-      let data = await this.$api.API_GET_TEACHERS();
-      this.teachers = data.data;
-      console.log(data);
-    },
     //新增教师
     async addTeacher() {
       let data = await this.$api.API_ADD_TEACHER(this.addContent);
       // console.log(data.data)
-      if(data.data.code == 1){
+      if(data.code == 1){
         this.teacherFromVisible2 = false;
         this.getTeachers();
       }
@@ -142,7 +145,7 @@ export default {
     //移除教师
     async removeTeacher(id) {
       let data = await this.$api.API_REMOVE_TEACHER(`?uid=${id}`);
-      if (data.data.code == 1) {
+      if (data.code == 1) {
         this.teachers = this.teachers.filter(el => el.userUid !== id);
       }
     },
@@ -151,7 +154,7 @@ export default {
       let params = this.editContent;
       let data = await this.$api.API_MODIFY_TEACHER(params);
       // console.log(data.data.code);
-      if (data.data.code == 1) {
+      if (data.code == 1) {
         this.teacherFromVisible = false;
         this.$set(this.teachers, this.editIndex, params);
       }
@@ -183,6 +186,7 @@ export default {
 .table {
   width: 720px;
 }
+
 .teacherFrom {
   text-align: center;
 }

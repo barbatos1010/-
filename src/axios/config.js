@@ -1,10 +1,11 @@
 import axios from 'axios'
+import api from './index'
 
 const instance = axios.create({
     //默认地址
     baseURL: 'http://192.168.1.188:12',
     //响应时长
-    timeout: 6000,
+    timeout: 6000
 })
 instance.defaults.headers.post['Content-Type'] = 'application/json'
 //请求拦截器
@@ -14,11 +15,10 @@ instance.interceptors.request.use(
      */
     (config) => {
         //配置登录接口之外的请求头
-        console.log(config)
         if(sessionStorage.getItem("USER_TOKEN") && !config.url.includes('OAuth')){
             config.headers.common['Authorization'] = sessionStorage.getItem("USER_TOKEN")
         }
-        console.log("发送请求")
+        console.log("发送请求",config)
         return config
     },
     (error) => {
@@ -30,12 +30,12 @@ instance.interceptors.request.use(
 //响应拦截器
 instance.interceptors.response.use(
     (response) => {
-        console.log("响应成功")
-        return response
+        // console.log("响应成功",response)
+        return response.data
     },
     (error) => {
-        console.log("响应失败",error)
-        // return Promise.reject(error)
+        console.log("响应失败",error.response)
+        return Promise.reject(error)
     }
 )
 /**
@@ -55,6 +55,5 @@ export default function (method, url, params) {
         default:
         console.error('未知的method:'+method)
         return false
-            
     }
 }

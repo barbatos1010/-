@@ -54,31 +54,24 @@ export default {
   },
   methods: {
      submitForm(formName) {
-     this.$refs[formName].validate( async (valid) => {
+     this.$refs[formName].validate(async (valid) => {
         if (valid) {
-            let data = await this.$api.API_LOGIN(`userMobile=${this.ruleForm.userMobile}&userPassword=${this.ruleForm.userPassword}`)
-            //登录成功
-            if(data.status === 200){
+              let data = await this.$api.API_LOGIN(`userMobile=${this.ruleForm.userMobile}&userPassword=${this.ruleForm.userPassword}`)
               console.log(data)
-               sessionStorage.setItem("USER_ID",data.data.profile.userUid)
-               sessionStorage.setItem("USER_TOKEN",'Bearer '+data.data.access_token)
-               let router_name = this.$route.query.redirect
-               this.$router.replace({name:router_name ? router_name : 'home' })
-            }else{
-                alert('登录失败')
-            }
+              if(data){
+                sessionStorage.setItem("USER_ID",data.profile.userUid)
+                sessionStorage.setItem("USER_TOKEN",'Bearer '+ data.access_token)
+                let router_name = this.$route.query.redirect
+                this.$router.replace({name:router_name ? router_name : 'home' })
+              }
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log("信息格式不正确!!");
         }
       });
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
     }
-  },
-  created(){
-    //   console.log(this.$route,this.$router)
   }
 };
 </script>
