@@ -24,7 +24,7 @@
           :name="item.name"
         >{{item.content}}</el-tab-pane>
       </el-tabs>
-      <div class="user">avatar &amp; nickname</div>
+      <div class="user">{{nickname}} &amp; avatar</div>
     </div>
     <!-- content -->
     <div class="content">
@@ -45,7 +45,6 @@
           <el-menu-item-group>
             <el-menu-item @click="addTab('planTest','安排测试')" index="planTest">安排测试</el-menu-item>
             <el-menu-item @click="addTab('correctPapers','批阅试卷')" index="correctPapers">批阅试卷</el-menu-item>
-            <el-menu-item @click="addTab('createPapers','老师出卷')" index="createPapers">老师出卷</el-menu-item>
             <el-menu-item @click="addTab('papersManagement','试卷管理')" index="papersManagement">试卷管理</el-menu-item>
             <el-menu-item @click="addTab('checkResult','查看成绩')" index="checkResult">查看成绩</el-menu-item>
           </el-menu-item-group>
@@ -80,7 +79,9 @@ export default {
       isCollapse: false,
       selectionTab: "",
       selectionMenu: "",
-      tabs: []
+      tabs: [],
+      nickname:sessionStorage.getItem("USER_NICKNAME"),
+
     };
   },
   methods: {

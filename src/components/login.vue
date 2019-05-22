@@ -59,8 +59,9 @@ export default {
               let data = await this.$api.API_LOGIN(`userMobile=${this.ruleForm.userMobile}&userPassword=${this.ruleForm.userPassword}`)
               console.log(data)
               if(data){
+                sessionStorage.setItem("USER_NICKNAME",data.profile.userName)
                 sessionStorage.setItem("USER_ID",data.profile.userUid)
-                sessionStorage.setItem("USER_TOKEN",'Bearer '+ data.access_token)
+                sessionStorage.setItem("USER_TOKEN",data.token_type+' '+ data.access_token)
                 let router_name = this.$route.query.redirect
                 this.$router.replace({name:router_name ? router_name : 'home' })
               }

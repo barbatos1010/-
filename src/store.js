@@ -42,13 +42,13 @@ export default new Vuex.Store({
     //获取所有教师
   async getTeachers(context){
       let data =  await api.API_GET_TEACHERS()
-      console.log(data)
+      // console.log(data)
       context.commit('getTeachers',data)
   },
   //获取所有班级
   async getClassList(context){
     let data =  await api.API_GETALL_CLASS()
-    console.log(data)
+    // console.log(data)
     context.commit('getClassList',data)
   },
   //获取所有课程
@@ -61,6 +61,10 @@ export default new Vuex.Store({
   async getTestPaperList(context,pageIndex = 0){
     let data =  await api.API_TEST_PAPER_LIST(`?pageIndex=${pageIndex}&pageSize=10`)
     console.log(data)
+    data.data.forEach(el => {
+      el.tpDate = el.tpDate.replace('T',' ')
+      console.log(el.tpDate)
+    })
     context.commit('getTestPaperList',data)
   }
   }

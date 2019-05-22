@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import home from './components/home.vue'
 import login from './components/login.vue'
-import editTestPaper from './components/onlineTest/editTestPaper.vue'
+
 Vue.use(Router)
 
 const router =  new Router({
@@ -27,13 +27,6 @@ const router =  new Router({
         },
         component:() => import (/*首页*/ './components/homePage.vue')
       },{
-        path:'createPapers',
-        name:'createPapers',
-        meta:{
-          requiresAuth:true
-        },
-        component:() => import (/*老师出卷*/ './components/onlineTest/createPapers.vue')
-      },{
         path:'planTest',
         name:'planTest',
         meta:{
@@ -57,6 +50,9 @@ const router =  new Router({
       },{
         path:'papersManagement',
         name:'papersManagement',
+        meta:{
+          requiresAuth:true
+        },
         component:() => import (/*试卷管理*/'./components/onlineTest/papersManagement.vue')
       },
       //基础数据
@@ -88,6 +84,13 @@ const router =  new Router({
           requiresAuth:true
         },
         component:() => import (/*教师管理*/'./components/basicsData/teacherManagement.vue')
+      },{
+        path:'editTestPaper',
+        name:'editTestPaper',
+        meta:{
+          requiresAuth:true
+        },
+        component:() => import(/*编辑试卷*/'./components/onlineTest/editTestPaper.vue')
       }]
     },{
       path:'/login',
@@ -96,13 +99,6 @@ const router =  new Router({
         requiresAuth:false
       },
       component:login
-    },{
-      path:'/editTestPaper',
-      name:'editTestPaper',
-      meta:{
-        requiresAuth:true
-      },
-      component:editTestPaper
     }
   ]
 })
