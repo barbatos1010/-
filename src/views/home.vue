@@ -24,7 +24,10 @@
           :name="item.name"
         >{{item.content}}</el-tab-pane>
       </el-tabs>
-      <div class="user">{{nickname}} &amp; avatar</div>
+      <div class="user">
+        {{nickname}}
+        <img accept=".jpg" @click="uploadForm = true" class="avatar hand" :src="avatar">
+      </div>
     </div>
     <!-- content -->
     <div class="content">
@@ -64,11 +67,21 @@
       </el-menu>
       <!-- 主体视图窗口 -->
       <transition name="el-fade-in-linear">
-      <div class="view-window">
-        <router-view></router-view>
-      </div>
+        <div class="view-window">
+          <router-view></router-view>
+        </div>
       </transition>
     </div>
+    <el-dialog title="上传图片" :visible.sync="uploadForm" width="30%">
+      <div class="uploadArea">
+         <img class="preview" :src="showArea">
+      </div>
+      <input ref="file" @change="getFile" type="file" accept="image/*">
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="uploadForm = false">取 消</el-button>
+        <el-button type="primary" @click="uploadAvatar">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -80,8 +93,11 @@ export default {
       selectionTab: "",
       selectionMenu: "",
       tabs: [],
-      nickname:sessionStorage.getItem("USER_NICKNAME"),
-
+      nickname: sessionStorage.getItem("USER_NICKNAME"),
+      avatar: require("../assets/img/20160203022635285.jpg"),
+      showArea: require("../assets/img/20160203022635285.jpg"),
+      uploadForm: false,
+      img:null
     };
   },
   methods: {
@@ -124,7 +140,6 @@ export default {
     //页面创建时获取本地存储
     getStorage() {
       if (sessionStorage.getItem("TAB_CHECKED")) {
-        console.log(111);
         this.selectionTab = sessionStorage.getItem("TAB_CHECKED");
         this.selectionMenu = sessionStorage.getItem("MENU_CHECKED");
         this.tabs = JSON.parse(sessionStorage.getItem("TAB_LIST"));
@@ -133,10 +148,25 @@ export default {
     //页面刷新时使用会话存储保存数据
     storage() {
       window.addEventListener("beforeunload", () => {
-        sessionStorage.setItem("TAB_LIST",JSON.stringify(this.tabs));
+        sessionStorage.setItem("TAB_LIST", JSON.stringify(this.tabs));
         sessionStorage.setItem("TAB_CHECKED", this.selectionTab);
         sessionStorage.setItem("MENU_CHECKED", this.selectionTab);
       });
+    },
+    //上传头像
+    uploadAvatar() {
+      this.$api.API_UPLOAD_AVATAR(new FormData().append('avatar',this.img),`userUid=${sessionStorage.getItem('USER_ID')}`)
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      this.uploadForm = false
+    },
+    getFile() {
+      this.img = this.$refs["file"].files[0];
+      this.showArea = window.URL.createObjectURL(this.img);
     }
   },
   created() {
@@ -173,6 +203,12 @@ export default {
   right: 20px;
   line-height: 60px;
 }
+.avatar {
+  width: 30px;
+  height: 30px;
+  vertical-align: middle;
+  border-radius: 50%;
+}
 .brand {
   padding: 0 10px;
   font-size: 1.3rem;
@@ -207,5 +243,13 @@ export default {
 }
 .tab-bar {
   width: 70%;
+}
+.uploadArea{
+  width: 165px;
+  height: 165px;
+}
+.preview{
+  width: 100%;
+  height: 100%;
 }
 </style>

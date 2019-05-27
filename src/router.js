@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import home from './components/home.vue'
-import login from './components/login.vue'
+import home from './views/home.vue'
+import login from './views/login.vue'
 
 Vue.use(Router)
 
@@ -25,35 +25,35 @@ const router =  new Router({
         meta:{
           requiresAuth:true
         },
-        component:() => import (/*首页*/ './components/homePage.vue')
+        component:() => import (/*首页*/ './views/homePage.vue')
       },{
         path:'planTest',
         name:'planTest',
         meta:{
           requiresAuth:true
         },
-        component:() => import (/*安排测试*/'./components/onlineTest/planTest.vue')
+        component:() => import (/*安排测试*/'./views/onlineTest/planTest.vue')
       },{
         path:'correctPapers',
         name:'correctPapers',
         meta:{
           requiresAuth:true
         },
-        component:() => import (/*批阅试卷*/'./components/onlineTest/correctPapers.vue')
+        component:() => import (/*批阅试卷*/'./views/onlineTest/correctPapers.vue')
       },{
         path:'checkResult',
         name:'checkResult',
         meta:{
           requiresAuth:true
         },
-        component:() => import (/*查看成绩*/'./components/onlineTest/checkResult.vue')
+        component:() => import (/*查看成绩*/'./views/onlineTest/checkResult.vue')
       },{
         path:'papersManagement',
         name:'papersManagement',
         meta:{
           requiresAuth:true
         },
-        component:() => import (/*试卷管理*/'./components/onlineTest/papersManagement.vue')
+        component:() => import (/*试卷管理*/'./views/onlineTest/papersManagement.vue')
       },
       //基础数据
       {
@@ -62,35 +62,35 @@ const router =  new Router({
         meta:{
           requiresAuth:true
         },
-        component:() => import (/*修改密码*/'./components/basicsData/changePassword.vue')
+        component:() => import (/*修改密码*/'./views/basicsData/changePassword.vue')
       },{
         path:'classManagement',
         name:'classManagement',
         meta:{
           requiresAuth:true
         },
-        component:() => import (/*班级管理*/'./components/basicsData/classManagement.vue')
+        component:() => import (/*班级管理*/'./views/basicsData/classManagement.vue')
       },{
         path:'studentManagement',
         name:'studentManagement',
         meta:{
           requiresAuth:true
         },
-        component:() => import (/*班级管理*/'./components/basicsData/studentManagement.vue')
+        component:() => import (/*班级管理*/'./views/basicsData/studentManagement.vue')
       },{
         path:'teacherManagement',
         name:'teacherManagement',
         meta:{
           requiresAuth:true
         },
-        component:() => import (/*教师管理*/'./components/basicsData/teacherManagement.vue')
+        component:() => import (/*教师管理*/'./views/basicsData/teacherManagement.vue')
       },{
         path:'editTestPaper',
         name:'editTestPaper',
         meta:{
           requiresAuth:true
         },
-        component:() => import(/*编辑试卷*/'./components/onlineTest/editTestPaper.vue')
+        component:() => import(/*编辑试卷*/'./views/onlineTest/editTestPaper.vue')
       }]
     },{
       path:'/login',

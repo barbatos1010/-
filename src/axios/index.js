@@ -59,5 +59,9 @@ export default {
     API_MODIFY_SCORE:(body) => api('post','/api/TestPaper/ModifyScore',body),
     //丛试卷上删除题目
     API_DEL_QUESTION:(query) => api('post','/api/TestPaper/RemoveQuestionFromTestPaper'+query),
-    
+    /*******头像上传和下载********/
+    //上传头像
+    API_UPLOAD_AVATAR:(body,query) => api('post','/api/User/UploadHeader?'+query,body),
+    //获取用户头像
+    API_GET_AVATAR:(query) => api('get','/api/User/GetUserHeader',query)
 }

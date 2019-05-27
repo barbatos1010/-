@@ -8,6 +8,8 @@ import 'element-ui/lib/theme-chalk/index.css'
 import api from './axios'
 
 Vue.prototype.$api = api
+//解除双向绑定
+Vue.prototype.$relieve = (obj) => JSON.parse(JSON.stringify(obj));
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 new Vue({
